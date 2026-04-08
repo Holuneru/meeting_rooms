@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -29,8 +30,8 @@ public class Booking {
     private Employee employee;
 
 
-    @Column(nullable = false) private LocalDateTime startTime;
-    @Column(nullable = false) private LocalDateTime endTime;
+    @Column(nullable = false) private LocalDate startTime;
+    @Column(nullable = false) private LocalDate endTime;
 
     private String purpose;
 
