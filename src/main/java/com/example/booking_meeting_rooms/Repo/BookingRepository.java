@@ -11,9 +11,10 @@ import java.util.List;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-    @Query("SELECT b FROM Booking b WHERE b.room.id = :roomId AND b.status = 'ACTIVE' " +
+    @Query("SELECT CASE WHEN COUNT(b) > 0 THEN TRUE ELSE FALSE END FROM Booking b " +
+            "WHERE b.room.id = :roomId AND b.status = 'ACTIVE' " +
             "AND b.startDate <= :endDate AND b.endDate >= :startDate")
-    List<Booking> findConflictingBookings(@Param("roomId") Long roomId,
-                                          @Param("startDate") LocalDate startDate,
-                                          @Param("endDate") LocalDate endDate);
+    boolean existsConflictingBooking(@Param("roomId") Long roomId,
+                                     @Param("startDate") LocalDate startDate,
+                                     @Param("endDate") LocalDate endDate);
 }

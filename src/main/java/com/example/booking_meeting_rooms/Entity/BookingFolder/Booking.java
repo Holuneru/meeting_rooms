@@ -30,8 +30,8 @@ public class Booking {
     private Employee employee;
 
 
-    @Column(nullable = false) private LocalDate startTime;
-    @Column(nullable = false) private LocalDate endTime;
+    @Column(nullable = false) private LocalDate startDate;
+    @Column(nullable = false) private LocalDate endDate;
 
     private String purpose;
 
