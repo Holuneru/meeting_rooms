@@ -1,0 +1,13 @@
+package com.example.booking_meeting_rooms;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class BookingMeetingRoomsApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(BookingMeetingRoomsApplication.class, args);
+    }
+
+}
