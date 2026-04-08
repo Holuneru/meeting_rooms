@@ -8,6 +8,8 @@ import com.example.booking_meeting_rooms.Repo.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class RoomService {
@@ -17,6 +19,10 @@ public class RoomService {
     public RoomResponse createRoom(RoomRequestCreate request){
         Room saved = roomRepository.save(mapperRoom.toRoom(request));
         return mapperRoom.toResponse(saved);
+    }
+
+    public List<RoomResponse> getAllRooms(){
+        return roomRepository.findAll().stream().map(mapperRoom::toResponse).toList();
     }
 
 }
