@@ -1,5 +1,6 @@
 package com.example.booking_meeting_rooms.Controller;
 
+import com.example.booking_meeting_rooms.DTO.DtoRoom.GetInfo.RoomWithBookingsDto;
 import com.example.booking_meeting_rooms.DTO.DtoRoom.RoomRequestCreate;
 import com.example.booking_meeting_rooms.DTO.DtoRoom.RoomResponse;
 import com.example.booking_meeting_rooms.Service.RoomService;
@@ -19,6 +20,11 @@ public class RoomController {
     @GetMapping()
     public List<RoomResponse> getRoomList() {
         return roomService.getAllRooms();
+    }
+
+    @GetMapping(path = "/{name}/bookings")
+    public RoomWithBookingsDto getRoomWithActiveBookings(@PathVariable String name) {
+        return roomService.getRoomWithActiveBookings(name);
     }
 
     @PostMapping(path = "/create")
