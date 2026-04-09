@@ -1,4 +1,4 @@
-package com.example.booking_meeting_rooms.DTO.DtoRoom.GetInfo;
+package com.example.booking_meeting_rooms.DTO.DtoEmployee.GetInfo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,9 +9,8 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoomBookingListDto {
-
-    private String employeeName;      // имя + фамилия
+public class EmployeeBookingsDto {
+    private String roomName;
     private LocalDate startDate;
     private LocalDate endDate;
     private String purpose;
