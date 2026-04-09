@@ -56,4 +56,12 @@ public class BookingService {
         log.info("Booking created");
         return new BookingResponse(room_booking.getName(), request.getStartDate(),saved.getEndDate(),saved.getStatus());
     }
+
+
+    /*
+    Добавь функцию отмены бронирования
+    Делай так чтобы при ее вызове ставился статус
+    для бронирования - BookingStatus.CANCELLED
+     */
+
 }
