@@ -2,6 +2,7 @@ package com.example.booking_meeting_rooms.Service;
 
 import com.example.booking_meeting_rooms.DTO.DtoBooking.BookingRequest;
 import com.example.booking_meeting_rooms.DTO.DtoBooking.BookingResponse;
+import com.example.booking_meeting_rooms.DTO.DtoBooking.GetInfo.AllBookingsInSystem;
 import com.example.booking_meeting_rooms.Entity.BookingFolder.Booking;
 import com.example.booking_meeting_rooms.Entity.BookingFolder.BookingStatus;
 import com.example.booking_meeting_rooms.Entity.EmployeesFolder.Employee;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Slf4j
@@ -87,5 +89,27 @@ public class BookingService {
         booking.setStatus(BookingStatus.CANCELLED);
         bookingRepository.save(booking);
         log.info("Booking with ID: {} cancelled by Employee (ID: {})", bookingId, employeeId);
+    }
+    
+    
+    public List<AllBookingsInSystem> getAllBookingsInSystem(Long employeeId) {
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(
+                () -> new RuntimeException("Employee not found with ID: " + employeeId)
+        );
+
+        if (!employee.getRole().equals(EmployeeRole.ADMIN)){
+            throw new RuntimeException("Only admins can view all bookings");
+        }
+        return bookingRepository.allBookingsInSystem().stream()
+                .map(booking -> new AllBookingsInSystem(
+                        booking.getId(),
+                        booking.getRoom().getName(),
+                        booking.getEmployee().getFirstName() + " " + booking.getEmployee().getLastName(),
+                        booking.getPurpose(),
+                        booking.getStartDate(),
+                        booking.getEndDate(),
+                        booking.getStatus()
+                ))
+                .toList();
     }
 }
