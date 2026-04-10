@@ -3,6 +3,7 @@ package com.example.booking_meeting_rooms.Service;
 import com.example.booking_meeting_rooms.DTO.DtoEmployee.EmployeeRequestCreate;
 import com.example.booking_meeting_rooms.DTO.DtoEmployee.EmployeeResponse;
 import com.example.booking_meeting_rooms.DTO.DtoEmployee.GetInfo.EmployeeBookingsDto;
+import com.example.booking_meeting_rooms.DTO.DtoEmployee.GetInfo.EmployeeOnlyAdminsDto;
 import com.example.booking_meeting_rooms.DTO.DtoEmployee.GetInfo.EmployeeWithBookingDto;
 import com.example.booking_meeting_rooms.Entity.BookingFolder.BookingStatus;
 import com.example.booking_meeting_rooms.Entity.EmployeesFolder.Employee;
@@ -62,6 +63,18 @@ public class EmployeeService {
         log.info("Admin status set for employee with ID: {}", employeeId);
     }
 
+    @Transactional(readOnly = true)
+    public List<EmployeeOnlyAdminsDto> getEmployeeOnlyAdmins(){
 
+        List<Employee> employees = employeeRepository.findOnlyAdmin();
+        return employees.stream()
+                .map(e -> new EmployeeOnlyAdminsDto(
+                        e.getId(),
+                        e.getFirstName(),
+                        e.getLastName(),
+                        e.getEmail()
+                ))
+                .toList();
 
+    }
 }
