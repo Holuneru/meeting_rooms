@@ -27,9 +27,9 @@ public class RoomController {
         return roomService.getRoomWithActiveBookings(name);
     }
 
-    @PostMapping(path = "/create")
-    public RoomResponse createRoom(@Valid @RequestBody RoomRequestCreate request){
-        return roomService.createRoom(request);
+    @PostMapping(path = "/create/admin/{id}")
+    public RoomResponse createRoom(@Valid @RequestBody RoomRequestCreate request, @PathVariable Long id){
+        return roomService.createRoomOnlyAdmin(request, id);
     }
 
 }
