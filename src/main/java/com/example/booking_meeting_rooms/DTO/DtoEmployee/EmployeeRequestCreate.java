@@ -15,5 +15,4 @@ public class EmployeeRequestCreate {
     @NotBlank
     private String email;
 
-    private EmployeeRole role;
 }

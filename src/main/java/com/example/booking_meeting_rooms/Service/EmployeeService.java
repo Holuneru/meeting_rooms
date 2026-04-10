@@ -25,8 +25,9 @@ public class EmployeeService {
     private final MapperEmployee mapperEmployee;
 
     public EmployeeResponse regEmployee(EmployeeRequestCreate request){
-
-        Employee saved = employeeRepository.save(mapperEmployee.toEmployee(request));
+        Employee employee = mapperEmployee.toEmployee(request);
+        employee.setRole(EmployeeRole.USER);
+        Employee saved = employeeRepository.save(employee);
         log.info("Employee saved by email: {}", request.getEmail());
         return mapperEmployee.toEmployeeResponse(saved);
     }
