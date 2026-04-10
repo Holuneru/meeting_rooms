@@ -4,9 +4,22 @@ This is a simple Spring Boot application for booking meeting rooms.
 
 ## Features
 
-*   Create a booking for a meeting room.
-*   Cancel an existing booking.
-*   View booking information.
+### Booking
+*   **Create Booking**: Create a booking for a meeting room.
+*   **Cancel Booking**: Cancel an existing booking.
+*   **Get All Bookings (Admin only)**: View all bookings in the system.
+*   **Check Room Availability**: Check if a room is available for a given time interval.
+
+### Room
+*   **Create Room (Admin only)**: Create a new meeting room.
+*   **Get All Rooms**: Get a list of all available rooms.
+*   **Get Room with Active Bookings**: View a room's details along with its active bookings.
+
+### Employee
+*   **Register Employee**: Register a new employee.
+*   **Get Employee's Active Bookings**: View an employee's active bookings.
+*   **Set Admin Status**: Grant admin privileges to an employee.
+*   **Get Admins**: Get a list of all employees with admin privileges.
 
 ## Technologies Used
 
