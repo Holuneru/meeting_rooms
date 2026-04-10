@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BookingRepository extends JpaRepository<Booking, Long> {
@@ -22,4 +23,8 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findAllByStatusAndEndDateBefore(
             @Param("status") BookingStatus status,
             @Param("date") LocalDate date);
+
+
+    @Query("SELECT b FROM Booking b JOIN FETCH b.employee WHERE b.id = :bookingId")
+    Optional<Booking> findWithEmployee(@Param("bookingId") Long bookingId);
 }

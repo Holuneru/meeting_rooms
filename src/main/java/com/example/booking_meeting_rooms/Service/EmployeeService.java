@@ -6,6 +6,7 @@ import com.example.booking_meeting_rooms.DTO.DtoEmployee.GetInfo.EmployeeBooking
 import com.example.booking_meeting_rooms.DTO.DtoEmployee.GetInfo.EmployeeWithBookingDto;
 import com.example.booking_meeting_rooms.Entity.BookingFolder.BookingStatus;
 import com.example.booking_meeting_rooms.Entity.EmployeesFolder.Employee;
+import com.example.booking_meeting_rooms.Entity.EmployeesFolder.EmployeeRole;
 import com.example.booking_meeting_rooms.Mapper.EmployeeMapper.MapperEmployee;
 import com.example.booking_meeting_rooms.Repo.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
@@ -47,6 +48,18 @@ public class EmployeeService {
                 employee.getFirstName() +" "+employee.getLastName(),
                 employeeBookingsDto
                 );
+    }
+
+    public void setAdminStatus(Long employeeId){
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(
+                () -> new RuntimeException("Employee not found")
+        );
+        if (employee.getRole() == EmployeeRole.ADMIN){
+            throw new RuntimeException("Employee already admin");
+        }
+        employee.setRole(EmployeeRole.ADMIN);
+        employeeRepository.save(employee);
+        log.info("Admin status set for employee with ID: {}", employeeId);
     }
 
 

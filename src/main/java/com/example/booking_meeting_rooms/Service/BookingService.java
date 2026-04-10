@@ -5,6 +5,7 @@ import com.example.booking_meeting_rooms.DTO.DtoBooking.BookingResponse;
 import com.example.booking_meeting_rooms.Entity.BookingFolder.Booking;
 import com.example.booking_meeting_rooms.Entity.BookingFolder.BookingStatus;
 import com.example.booking_meeting_rooms.Entity.EmployeesFolder.Employee;
+import com.example.booking_meeting_rooms.Entity.EmployeesFolder.EmployeeRole;
 import com.example.booking_meeting_rooms.Entity.Room;
 import com.example.booking_meeting_rooms.Repo.BookingRepository;
 import com.example.booking_meeting_rooms.Repo.EmployeeRepository;
@@ -12,6 +13,7 @@ import com.example.booking_meeting_rooms.Repo.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
@@ -57,11 +59,33 @@ public class BookingService {
         return new BookingResponse(room_booking.getName(), request.getStartDate(),saved.getEndDate(),saved.getStatus());
     }
 
-
-    /*
-    Добавь функцию отмены бронирования
-    Делай так чтобы при ее вызове ставился статус
-    для бронирования - BookingStatus.CANCELLED
-     */
-
+    @Transactional
+    public void cancelBooking(Long bookingId, Long employeeId) {
+        Booking booking = bookingRepository.findWithEmployee(bookingId).orElseThrow(
+                () -> new RuntimeException("Booking not found with ID: " + bookingId)
+        );
+        
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(
+                () -> new RuntimeException("Employee not found with ID: " + employeeId)
+        );
+        
+        if (booking.getStatus() == BookingStatus.CANCELLED){
+            throw new RuntimeException("Booking already cancelled");
+        }
+        
+        if (employee.getRole() == EmployeeRole.ADMIN){
+            booking.setStatus(BookingStatus.CANCELLED);
+            bookingRepository.save(booking);
+            log.info("Booking with ID: {} cancelled by Admin (Employee ID: {})", bookingId, employeeId);
+            return; // Admin can cancel any booking, so exit after cancellation
+        }
+        
+        if (!booking.getEmployee().getId().equals(employee.getId())) {
+            throw new RuntimeException("Employee with ID: " + employeeId + " is not authorized to cancel this booking.");
+        }
+        
+        booking.setStatus(BookingStatus.CANCELLED);
+        bookingRepository.save(booking);
+        log.info("Booking with ID: {} cancelled by Employee (ID: {})", bookingId, employeeId);
+    }
 }

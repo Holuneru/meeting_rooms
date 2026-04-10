@@ -4,10 +4,7 @@ import com.example.booking_meeting_rooms.DTO.DtoBooking.BookingRequest;
 import com.example.booking_meeting_rooms.DTO.DtoBooking.BookingResponse;
 import com.example.booking_meeting_rooms.Service.BookingService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/booking")
@@ -18,6 +15,11 @@ public class BookingController {
     @PostMapping(path = "/create")
     public BookingResponse createBooking(@RequestBody BookingRequest bookingRequest) {
         return bookingService.createBooking(bookingRequest);
+    }
+    
+    @PutMapping(path = "/cancel/employee/{employeeId}/booking/{bookingId}")
+    public void cancelBooking(@PathVariable Long employeeId, @PathVariable Long bookingId) {
+        bookingService.cancelBooking(bookingId, employeeId);
     }
 }
 

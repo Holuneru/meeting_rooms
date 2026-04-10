@@ -25,6 +25,11 @@ public class EmployeeController {
         return employeeService.regEmployee(request);
     }
 
+    @PutMapping(path = "/{id}/setAdmin")
+    public void setAdminStatus(@PathVariable Long id){
+        employeeService.setAdminStatus(id);
+    }
+
 
 }
 
