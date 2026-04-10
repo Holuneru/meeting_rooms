@@ -2,6 +2,7 @@ package com.example.booking_meeting_rooms.Repo;
 
 import com.example.booking_meeting_rooms.Entity.BookingFolder.Booking;
 import com.example.booking_meeting_rooms.Entity.BookingFolder.BookingStatus;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,4 +30,10 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     Optional<Booking> findWithEmployee(@Param("bookingId") Long bookingId);
     @Query("SELECT b FROM Booking b JOIN FETCH b.room JOIN FETCH b.employee")
     List<Booking> allBookingsInSystem();
+
+    @Query("SELECT b FROM Booking b WHERE b.status = 'ACTIVE' AND b.startDate <= :endDate AND b.endDate >= :startDate AND b.room.id = :roomId")
+    Optional<Booking> checkIntervalDateRoom(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("roomId") Long roomId);
 }

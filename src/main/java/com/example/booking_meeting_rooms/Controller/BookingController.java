@@ -7,6 +7,7 @@ import com.example.booking_meeting_rooms.Service.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -18,6 +19,13 @@ public class BookingController {
     @GetMapping(path = "/allBookings/admin/{employeeId}")
     public List<AllBookingsInSystem> getAllBookingsInSystem(@PathVariable Long employeeId){
         return bookingService.getAllBookingsInSystem(employeeId);
+    }
+
+    @GetMapping(path = "/checkIntervalDateRoom")
+    public boolean checkIntervalDateRoom(@RequestParam("startDate") String startDate,
+                                         @RequestParam("endDate") String endDate,
+                                         @RequestParam("roomId") Long roomId) {
+        return bookingService.checkIntervalDateRoom(LocalDate.parse(startDate), LocalDate.parse(endDate), roomId);
     }
 
     @PostMapping(path = "/create")

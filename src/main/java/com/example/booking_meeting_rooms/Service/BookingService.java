@@ -112,4 +112,14 @@ public class BookingService {
                 ))
                 .toList();
     }
+
+    public boolean checkIntervalDateRoom(LocalDate startDate, LocalDate endDate, Long roomId) {
+        if (bookingRepository.checkIntervalDateRoom(startDate, endDate, roomId).isPresent()){
+            log.info("Conflict Booking");
+            return false;
+        } else {
+            log.info("No Conflict Booking");
+            return true;
+        }
+    }
 }
