@@ -1,56 +1,72 @@
-# Booking Meeting Rooms
+# 🏢 Booking Meeting Rooms
 
-This is a simple Spring Boot application for booking meeting rooms.
+Система для бронирования переговорных комнат в офисе. Сотрудники могут бронировать комнаты на определённые даты, проверять занятость, управлять своими бронированиями и просматривать активные бронирования комнат. Проект написан на **Spring Boot** с использованием **JPA/Hibernate**, **PostgreSQL**, **Spring Security (JWT)** и **Swagger**.
 
-## Features
+---
 
-### Booking
-*   **Create Booking**: Create a booking for a meeting room.
-*   **Cancel Booking**: Cancel an existing booking.
-*   **Get All Bookings (Admin only)**: View all bookings in the system.
-*   **Check Room Availability**: Check if a room is available for a given time interval.
+## 🧠 Бизнес-логика
 
-### Room
-*   **Create Room (Admin only)**: Create a new meeting room.
-*   **Get All Rooms**: Get a list of all available rooms.
-*   **Get Room with Active Bookings**: View a room's details along with its active bookings.
+- **Администратор** создаёт комнаты (название, вместимость, оснащение).
+- **Сотрудник** бронирует комнату на один день (`startDate`), система автоматически устанавливает `endDate = startDate + 1 день`.
+- **Проверка доступности**: нельзя забронировать комнату, если на выбранную дату уже есть активное бронирование.
+- **Отмена бронирования**: пользователь может отменить только свои бронирования.
+- **Автоматическое завершение**: шедулер раз в сутки переводит бронирования с `endDate < сегодня` в статус `EXPIRED`.
 
-### Employee
-*   **Register Employee**: Register a new employee.
-*   **Get Employee's Active Bookings**: View an employee's active bookings.
-*   **Set Admin Status**: Grant admin privileges to an employee.
-*   **Get Admins**: Get a list of all employees with admin privileges.
+---
 
-## Technologies Used
+## 🛠️ Технологический стек
 
-*   **Java 21**
-*   **Spring Boot**
-*   **Spring Data JPA**
-*   **PostgreSQL**
-*   **Lombok**
-*   **MapStruct**
-*   **Swagger (OpenAPI)** for API documentation.
+| Компонент | Технология |
+|-----------|-------------|
+| **Язык** | Java 21 |
+| **Фреймворк** | Spring Boot 4.0.5 |
+| **Безопасность** | Spring Security + JWT |
+| **ORM** | Hibernate (JPA) |
+| **База данных** | PostgreSQL |
+| **Маппинг DTO** | MapStruct |
+| **Документация API** | SpringDoc OpenAPI (Swagger) |
+| **Сборка** | Maven |
 
-## How to Run
+---
 
-1.  **Prerequisites**:
-    *   JDK 21 or later
-    *   Maven 3.x
-    *   PostgreSQL database running
+## 📦 Структура проекта (основные пакеты)
 
-2.  **Configuration**:
-    *   Open `src/main/resources/application.properties` and configure your database connection details (URL, username, password).
+---
 
-3.  **Build the project**:
-    ```bash
-    mvn clean install
-    ```
+## 🚀 Основные API эндпоинты
 
-4.  **Run the application**:
-    ```bash
-    mvn spring-boot:run
-    ```
-    The application will start on `http://localhost:8080`.
+### Комнаты
+| Метод | Эндпоинт | Описание |
+|-------|----------|-----------|
+| POST | `/api/rooms` | Создать комнату (админ) |
+| GET | `/api/rooms` | Список всех комнат |
+| GET | `/api/rooms/{name}/bookings` | Активные бронирования комнаты |
 
-5.  **API Documentation**:
-    *   Once the application is running, you can access the Swagger UI for API documentation at `http://localhost:8080/swagger-ui.html`.
+### Сотрудники
+| Метод | Эндпоинт | Описание |
+|-------|----------|-----------|
+| POST | `/api/employees` | Зарегистрировать сотрудника |
+| GET | `/api/employees/{id}/bookings` | Активные бронирования сотрудника |
+
+### Бронирования
+| Метод | Эндпоинт | Описание |
+|-------|----------|-----------|
+| POST | `/api/bookings` | Создать бронирование |
+| DELETE | `/api/bookings/{id}` | Отменить бронирование |
+| PUT | `/api/bookings/{id}/cancel` | Отмена (альтернативный вариант) |
+
+---
+
+## 🔄 Логика бронирования
+
+- **Проверка пересечения дат** через JPQL запрос:
+  ```sql
+  SELECT b FROM Booking b WHERE b.room.id = :roomId AND b.status = 'ACTIVE'
+  AND b.startDate < :endDate AND b.endDate > :startDate
+
+   spring.datasource.url=jdbc:postgresql://localhost:5432/booking_db
+   spring.datasource.username=postgres
+   spring.datasource.password=your_password
+   spring.jpa.hibernate.ddl-auto=update
+   jwt.secret=mySuperSecretKeyForJWT12345!@#$%^&*()
+   jwt.expiration=86400000
